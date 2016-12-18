@@ -6,7 +6,7 @@ require 'itamae/plugin/recipe/letsencrypt/version'
 Gem::Specification.new do |spec|
   spec.name          = "itamae-plugin-recipe-letsencrypt"
   spec.version       = Itamae::Plugin::Recipe::Letsencrypt::VERSION
-  spec.authors       = ["yusaku.hatanaka"]
+  spec.authors       = ["Yusaku Hatanaka (hatappi)"]
   spec.email         = ["hata.yusaku.1225@gmail.com"]
 
   spec.summary       = %q{Itamae plugin to install letsencrypt}
