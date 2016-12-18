@@ -49,7 +49,8 @@ letsencrypt:
     - test.example.com
     - test2.example.com
 ```
-
+ 
+**Process of the port selected by `challenge_type` needs to be stopped**
 
 
 ## Contributing
