@@ -22,7 +22,7 @@ Or install it yourself as:
 ## Support
 - Debian GNU/Linux 8 (jessie)
 
-I have not confirmed it in other environments yet
+I have not confirmed it in other environments yet  
 I will check in turn
 
 ## Usage
