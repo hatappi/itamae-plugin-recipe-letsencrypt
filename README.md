@@ -19,6 +19,12 @@ Or install it yourself as:
 
     $ gem install itamae-plugin-recipe-letsencrypt
 
+## Support
+- Debian GNU/Linux 8 (jessie)
+
+I have not confirmed it in other environments yet
+I will check in turn
+
 ## Usage
 
 ### Recipe
