@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["yusaku.hatanaka"]
   spec.email         = ["hata.yusaku.1225@gmail.com"]
 
-  spec.summary       = %q{Itamae plugin to install letencrypt}
-  spec.description   = %q{Itamae plugin to install letencrypt}
+  spec.summary       = %q{Itamae plugin to install letsencrypt}
+  spec.description   = %q{Itamae plugin to install letsencrypt}
   spec.homepage      = 'https://github.com/hatappi/itamae-plugin-recipe-letsencrypt'
   spec.license       = "MIT"
 
