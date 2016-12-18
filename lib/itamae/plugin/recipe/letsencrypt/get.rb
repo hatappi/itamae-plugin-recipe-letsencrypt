@@ -3,7 +3,8 @@ node.reverse_merge!(
     certbot_auto_path: '/usr/bin/certbot-auto',
     cron_user: 'root',
     cron_file_path: '/etc/cron.d/itamae-letsencrypt',
-    cron_configuration: true
+    cron_configuration: true,
+    challenge_type: 'http-01'
   }
 )
 
@@ -22,7 +23,7 @@ end
 # get each domain certificate
 node[:letsencrypt][:domains].each do |domain|
   execute "get #{domain} certificate" do
-    command "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n"
+    command "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n --standalone-supported-challenges #{node[:letsencrypt][:challenge_type]}"
   end
 end
 
