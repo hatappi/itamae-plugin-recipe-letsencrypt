@@ -44,10 +44,12 @@ letsencrypt:
   cron_user: root
   cron_file_path: /etc/cron.d/itamae-letsencrypt
   cron_configuration: true
+  challenge_type: 'http-01' # port80 is http-01, port443 is tls-sni-01 
   domains:
     - test.example.com
     - test2.example.com
 ```
+
 
 
 ## Contributing
