@@ -4,7 +4,8 @@ node.reverse_merge!(
     cron_user: 'root',
     cron_file_path: '/etc/cron.d/itamae-letsencrypt',
     cron_configuration: true,
-    challenge_type: 'http-01'
+    challenge_type: 'http-01',
+    authenticator: 'standalone',
   }
 )
 
@@ -31,11 +32,12 @@ node[:letsencrypt][:domains].each do |domain|
       '--agree-tos',
       "-d #{domain}",
       "-m #{node[:letsencrypt][:email]}",
-      "-a standalone",
+      "-a #{node[:letsencrypt][:authenticator]}",
       '--keep',
       '-n',
       "--preferred-challenges #{node[:letsencrypt][:challenge_type]}",
     ]
+    cmd << "-w #{node[:letsencrypt][:webroot_path]}" if node[:letsencrypt][:webroot_path]
     cmd << '--debug' if node[:platform] == 'amazon'
     command cmd.join(' ')
   end
