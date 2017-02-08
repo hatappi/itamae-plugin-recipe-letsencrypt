@@ -23,7 +23,7 @@ end
 # get each domain certificate
 node[:letsencrypt][:domains].each do |domain|
   execute "get #{domain} certificate" do
-    command "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n --standalone-supported-challenges #{node[:letsencrypt][:challenge_type]}"
+    command "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n --preferred-challenges #{node[:letsencrypt][:challenge_type]}"
   end
 end
 
