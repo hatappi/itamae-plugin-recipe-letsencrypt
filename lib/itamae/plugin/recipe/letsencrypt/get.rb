@@ -25,9 +25,19 @@ end
 # get each domain certificate
 node[:letsencrypt][:domains].each do |domain|
   execute "get #{domain} certificate" do
-    cmd "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n --preferred-challenges #{node[:letsencrypt][:challenge_type]}"
-    cmd << ' --debug' if node[:platform] == 'amazon'
-    command cmd
+    cmd = [
+      node[:letsencrypt][:certbot_auto_path],
+      'certonly',
+      '--agree-tos',
+      "-d #{domain}",
+      "-m #{node[:letsencrypt][:email]}",
+      "-a standalone",
+      '--keep',
+      '-n',
+      "--preferred-challenges #{node[:letsencrypt][:challenge_type]}",
+    ]
+    cmd << '--debug' if node[:platform] == 'amazon'
+    command cmd.join(' ')
   end
 end
 
