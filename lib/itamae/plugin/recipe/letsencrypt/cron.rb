@@ -8,6 +8,13 @@ execute 'set cron file' do
   command "echo '#{cron_text}' > #{node[:letsencrypt][:cron_file_path]}"
 end
 
-service "cron" do
+service_name = case node[:platform]
+              when 'amazon'
+                'crond'
+              else
+                'cron'
+              end
+
+service service_name do
   action :start
 end
