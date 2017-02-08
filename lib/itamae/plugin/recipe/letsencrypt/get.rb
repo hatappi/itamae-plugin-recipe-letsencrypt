@@ -17,13 +17,17 @@ execute 'change certbot-auto permission' do
 end
 
 execute 'install dependency package' do
-  command "#{node[:letsencrypt][:certbot_auto_path]} -n --os-packages-only"
+  cmd = "#{node[:letsencrypt][:certbot_auto_path]} -n --os-packages-only"
+  cmd << ' --debug' if node[:platform] == 'amazon'
+  command cmd
 end
 
 # get each domain certificate
 node[:letsencrypt][:domains].each do |domain|
   execute "get #{domain} certificate" do
-    command "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n --preferred-challenges #{node[:letsencrypt][:challenge_type]}"
+    cmd "#{node[:letsencrypt][:certbot_auto_path]} certonly --agree-tos -d #{domain} -m #{node[:letsencrypt][:email]} -a standalone --keep -n --preferred-challenges #{node[:letsencrypt][:challenge_type]}"
+    cmd << ' --debug' if node[:platform] == 'amazon'
+    command cmd
   end
 end
 
