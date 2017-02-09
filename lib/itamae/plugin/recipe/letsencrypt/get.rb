@@ -6,6 +6,7 @@ node.reverse_merge!(
     cron_configuration: true,
     challenge_type: 'http-01',
     authenticator: 'standalone',
+    debug_mode: false,
   }
 )
 
@@ -21,7 +22,7 @@ end
 
 execute 'install dependency package' do
   cmd = "#{node[:letsencrypt][:certbot_auto_path]} -n --os-packages-only"
-  cmd << ' --debug' if node[:platform] == 'amazon'
+  cmd << ' --debug' if node[:letsencrypt][:debug_mode]
   command cmd
   not_if "test -n \"$(#{cmd} --dry-run | grep 'OS packages installed.')\""
 end
@@ -41,7 +42,7 @@ node[:letsencrypt][:domains].each do |domain|
       "--preferred-challenges #{node[:letsencrypt][:challenge_type]}",
     ]
     cmd << "-w #{node[:letsencrypt][:webroot_path]}" if node[:letsencrypt][:webroot_path]
-    cmd << '--debug' if node[:platform] == 'amazon'
+    cmd << '--debug' if node[:letsencrypt][:debug_mode]
     command cmd.join(' ')
     not_if "test -d /etc/letsencrypt/live/#{domain}"
   end

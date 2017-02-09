@@ -50,6 +50,7 @@ letsencrypt:
     - test2.example.com
   authenticator: standalone # standalone, webroot
   webroot_path: /var/www/example
+  debug_mode: false
 ```
 
 **Process of the port selected by `challenge_type` needs to be stopped**
