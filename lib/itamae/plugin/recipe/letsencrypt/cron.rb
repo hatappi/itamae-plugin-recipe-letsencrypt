@@ -4,10 +4,17 @@ cron_text = <<-EOS
 0 0 1 * * #{node[:letsencrypt][:cron_user]} #{node[:letsencrypt][:certbot_auto_path]} renew
 EOS
 
-execute 'set cron file' do
-  command "echo '#{cron_text}' > #{node[:letsencrypt][:cron_file_path]}"
+file node[:letsencrypt][:cron_file_path] do
+  content cron_text
 end
 
-service "cron" do
+service_name = case node[:platform]
+              when 'amazon'
+                'crond'
+              else
+                'cron'
+              end
+
+service service_name do
   action :start
 end
