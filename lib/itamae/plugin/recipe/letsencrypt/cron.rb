@@ -9,7 +9,7 @@ file node[:letsencrypt][:cron_file_path] do
 end
 
 service_name = case node[:platform]
-              when 'amazon'
+              when 'amazon','redhat'
                 'crond'
               else
                 'cron'
