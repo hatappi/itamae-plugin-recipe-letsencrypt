@@ -13,11 +13,13 @@ node.reverse_merge!(
 execute 'download certbot-auto' do
   command "wget https://dl.eff.org/certbot-auto -O #{node[:letsencrypt][:certbot_auto_path]}"
   not_if "test -f #{node[:letsencrypt][:certbot_auto_path]}"
+  not_if "rpm -qa | grep certbot"
 end
 
 execute 'change certbot-auto permission' do
   command "chmod a+x #{node[:letsencrypt][:certbot_auto_path]}"
   not_if "test -x #{node[:letsencrypt][:certbot_auto_path]}"
+  not_if "rpm -qa | grep certbot"
 end
 
 execute 'install dependency package' do
@@ -25,6 +27,7 @@ execute 'install dependency package' do
   cmd << ' --debug' if node[:letsencrypt][:debug_mode]
   command cmd
   not_if "test -n \"$(#{cmd} --dry-run | grep 'OS packages installed.')\""
+  not_if "rpm -qa | grep certbot"
 end
 
 # get each domain certificate
