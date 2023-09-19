@@ -8,6 +8,18 @@ node.reverse_merge!(
   }
 )
 
+node.validate! do
+  {
+    letsencrypt: {
+      cron: {
+        user: string,
+        file_path: string,
+      },
+      certbot_auto_path: string,
+    }
+  }
+end
+
 cron_text = <<-EOS
 # DO NOT EDIT
 # BECAUSE THIS CRON CREATE BY itamae-plugin-recipe-letsencrypt

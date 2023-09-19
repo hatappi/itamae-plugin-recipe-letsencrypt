@@ -9,6 +9,21 @@ node.reverse_merge!(
   }
 )
 
+node.validate! do
+  {
+    letsencrypt: {
+      certbot_auto_path: string,
+      challenge_type: string,
+      authenticator: string,
+      debug_mode: boolean,
+
+      domains: array_of(string),
+      email: string,
+      webroot_path: optional(string),
+    }
+  }
+end
+
 execute 'download certbot-auto' do
   download = ["wget", "https://dl.eff.org/certbot-auto", "-O", node[:letsencrypt][:certbot_auto_path]].shelljoin
   command download
