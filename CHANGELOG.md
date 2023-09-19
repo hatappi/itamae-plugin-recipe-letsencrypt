@@ -1,3 +1,7 @@
+## Unreleased
+- Updated Certbot installation
+- Revised certificates getting/updating process
+
 ## v0.2.1 - 2017/01/10
 - Support Amazon Linux
 
