@@ -2,20 +2,22 @@ require 'shellwords'
 
 node.reverse_merge!(
   letsencrypt: {
-    certbot_auto_path: '/usr/bin/certbot-auto',
     challenge_type: 'http-01',
     authenticator: 'standalone',
     debug_mode: false,
+    command: '/usr/bin/certbot',
+    snappy_executable: '/snap/bin/certbot',
   }
 )
 
 node.validate! do
   {
     letsencrypt: {
-      certbot_auto_path: string,
       challenge_type: string,
       authenticator: string,
       debug_mode: boolean,
+      command: string,
+      snappy_executable: string,
 
       domains: array_of(string),
       email: string,
@@ -24,47 +26,31 @@ node.validate! do
   }
 end
 
-execute 'download certbot-auto' do
-  download = ["wget", "https://dl.eff.org/certbot-auto", "-O", node[:letsencrypt][:certbot_auto_path]].shelljoin
-  command download
+package 'snapd'
 
-  exists = ["test", "-f", node[:letsencrypt][:certbot_auto_path]].shelljoin
-  not_if exists
+snappy 'certbot' do
+  classic true
 end
 
-execute 'change certbot-auto permission' do
-  make_executable = ["chmod", "a+x", node[:letsencrypt][:certbot_auto_path]].shelljoin
-  command make_executable
-
-  executable_exists = ["test", "-x", node[:letsencrypt][:certbot_auto_path]].shelljoin
-  not_if executable_exists
-end
-
-execute 'install dependency package' do
-  cmd = [node[:letsencrypt][:certbot_auto_path], "-n", "--os-packages-only"].shelljoin
-  cmd << '--debug' if node[:letsencrypt][:debug_mode]
-  command cmd.shelljoin
-
-  dry_run = [*cmd, '--dry-run'].shelljoin
-  detect = ["grep", "OS packages installed."].shelljoin
-  not_if "test -n $(#{dry_run} | #{detect})"
+link node[:letsencrypt][:command] do
+  to node[:letsencrypt][:snappy_executable]
 end
 
 # get each domain certificate
 node[:letsencrypt][:domains].each do |domain|
   execute "get #{domain} certificate" do
     cmd = [
-      node[:letsencrypt][:certbot_auto_path],
+      node[:letsencrypt][:command],
       'certonly',
       '--agree-tos',
-      "-d", domain,
+      "--domain", domain,
       "-m", node[:letsencrypt][:email],
-      "-a", node[:letsencrypt][:authenticator],
+      '-n', # Run non-interactively
       '--keep',
-      '-n',
+      "--authenticator", node[:letsencrypt][:authenticator],
       "--preferred-challenges", node[:letsencrypt][:challenge_type],
     ]
-    cmd += ["-w", node[:letsencrypt][:webroot_path]] if node[:letsencrypt][:webroot_path]
+    cmd += ["--webroot", node[:letsencrypt][:webroot_path]] if node[:letsencrypt][:webroot_path]
     cmd << '--debug' if node[:letsencrypt][:debug_mode]
     command cmd.shelljoin
 
