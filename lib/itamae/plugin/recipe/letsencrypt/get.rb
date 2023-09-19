@@ -7,6 +7,7 @@ node.reverse_merge!(
     debug_mode: false,
     command: '/usr/bin/certbot',
     snappy_executable: '/snap/bin/certbot',
+    live_dir: '/etc/letsencrypt/live',
   }
 )
 
@@ -18,6 +19,7 @@ node.validate! do
       debug_mode: boolean,
       command: string,
       snappy_executable: string,
+      live_dir: string,
 
       domains: array_of(string),
       email: string,
@@ -54,7 +56,7 @@ node[:letsencrypt][:domains].each do |domain|
     cmd << '--debug' if node[:letsencrypt][:debug_mode]
     command cmd.shelljoin
 
-    dir = File.join("/etc/letsencrypt/live", domain)
+    dir = File.join(node[:letsencrypt][:live_dir], domain)
     exists = ["test", "-d", dir].shelljoin
     not_if exists
   end
