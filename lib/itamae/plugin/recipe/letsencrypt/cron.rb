@@ -31,11 +31,11 @@ file node[:letsencrypt][:cron][:file_path] do
 end
 
 service_name = case node[:platform]
-              when 'amazon'
-                'crond'
-              else
-                'cron'
-              end
+               when 'amazon'
+                 'crond'
+               else
+                 'cron'
+               end
 
 service service_name do
   action :start
