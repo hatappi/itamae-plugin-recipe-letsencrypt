@@ -1,10 +1,20 @@
+node.reverse_merge!(
+  letsencrypt: {
+    cron: {
+      user: 'root',
+      file_path: '/etc/cron.d/itamae-letsencrypt',
+    },
+    certbot_auto_path: '/usr/bin/certbot-auto',
+  }
+)
+
 cron_text = <<-EOS
 # DO NOT EDIT
 # BECAUSE THIS CRON CREATE BY itamae-plugin-recipe-letsencrypt
-0 0 1 * * #{node[:letsencrypt][:cron_user]} #{node[:letsencrypt][:certbot_auto_path]} renew
+0 0 1 * * #{node[:letsencrypt][:cron][:user]} #{node[:letsencrypt][:certbot_auto_path]} renew
 EOS
 
-file node[:letsencrypt][:cron_file_path] do
+file node[:letsencrypt][:cron][:file_path] do
   content cron_text
 end
 

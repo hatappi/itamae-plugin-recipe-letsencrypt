@@ -3,9 +3,6 @@ require 'shellwords'
 node.reverse_merge!(
   letsencrypt: {
     certbot_auto_path: '/usr/bin/certbot-auto',
-    cron_user: 'root',
-    cron_file_path: '/etc/cron.d/itamae-letsencrypt',
-    cron_configuration: true,
     challenge_type: 'http-01',
     authenticator: 'standalone',
     debug_mode: false,
@@ -61,5 +58,3 @@ node[:letsencrypt][:domains].each do |domain|
     not_if exists
   end
 end
-
-include_recipe 'letsencrypt::cron' if node[:letsencrypt][:cron_configuration]
