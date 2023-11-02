@@ -1,10 +1,11 @@
+include_recipe 'command'
+
 node.reverse_merge!(
   letsencrypt: {
     cron: {
       user: 'root',
       file_path: '/etc/cron.d/itamae-letsencrypt',
     },
-    command: '/usr/bin/certbot',
   }
 )
 
@@ -15,19 +16,14 @@ node.validate! do
         user: string,
         file_path: string,
       },
-      command: string,
     }
   }
 end
 
-cron_text = <<-EOS
-# DO NOT EDIT
-# BECAUSE THIS CRON CREATE BY itamae-plugin-recipe-letsencrypt
-0 0 1 * * #{node[:letsencrypt][:cron][:user]} #{node[:letsencrypt][:command]} renew
-EOS
-
-file node[:letsencrypt][:cron][:file_path] do
-  content cron_text
+template node[:letsencrypt][:cron][:file_path] do
+  variables user: node[:letsencrypt][:cron][:user],
+            command: node[:letsencrypt][:command]
+  source 'templates/etc/cron.d/itamae-letsencrypt.erb'
 end
 
 service_name = case node[:platform]

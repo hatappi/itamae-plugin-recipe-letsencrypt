@@ -1,11 +1,12 @@
 require 'shellwords'
 
+include_recipe 'command'
+
 node.reverse_merge!(
   letsencrypt: {
     challenge_type: 'http-01',
     authenticator: 'standalone',
     debug_mode: false,
-    command: '/usr/bin/certbot',
     snappy_executable: '/snap/bin/certbot',
     live_dir: '/etc/letsencrypt/live',
   }
@@ -17,7 +18,6 @@ node.validate! do
       challenge_type: string,
       authenticator: string,
       debug_mode: boolean,
-      command: string,
       snappy_executable: string,
       live_dir: string,
 
